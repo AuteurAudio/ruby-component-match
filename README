@@ -1,0 +1,28 @@
+                A Ruby Component Value Matcher
+		------------------------------
+
+
+Overview:	Matches components on a single measured
+		axis that is orderable (float).  Input can 
+		be programatic via array or by way of CSV
+		with column number specified.  Results can
+		be computed and returned in absolute terms
+		or in percentage terms.  Prints a report 
+		but can be modified to not.
+
+Method:		Iterative passes taking best adjacent pairing
+		in forward and reverse sweeps until there are
+		no more potential pairs meeting tolerance
+		criteria. 
+
+Examples:	Match 1st column of CSV to 0.3%:
+		  ComponentMatch.new('some.csv')
+				.match(0.3)
+
+		Match array to 2%:
+		  ComponentMatch.new([1,2,3])
+				.match(2)
+		
+		Match 3rd column of CSV to 0.3 units:
+		  ComponentMatch.new('some.csv',2)
+			        .match(0.3,'absolute')
