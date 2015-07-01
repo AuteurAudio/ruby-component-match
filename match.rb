@@ -110,12 +110,10 @@ class ComponentMatch
     end
 
     def initialize(arg,col=0)
-        if arg.is_a?(String)
+        if arg.is_a?String
             @original_list = []
-            CSV.foreach(arg) do |row|
-                @original_list << Float(row[col])
-            end
-        elsif arg.is_a?(Array)
+            CSV.foreach(arg) { |row| @original_list << Float(row[col]) } 
+        elsif arg.is_a?Array
             @original_list = arg
         end
     end
