@@ -9,20 +9,24 @@ Overview:	Matches components on a single measured
 		be computed and returned in absolute terms
 		or in percentage terms, absolute being the
 		default.  There are accessors for the 
-		matched and residual part data, and a 
-		convenience report generator.
+		matched and residual component data if one
+		needs to use it as a library, and a 
+		convenience report generator if one needs a
+		one-liner part matching utility.
 
 Method:		Iterative passes taking best adjacent pairing
 		in forward and reverse sweeps until there are
 		no more potential pairs meeting tolerance
 		criteria. 
 
-Examples:	Match 1st column of CSV to 0.02 (absolute):
+Examples:	Match 1st column of CSV to 0.02 (absolute) and
+		produce a printed report:
 		  ComponentMatch.new('some.csv')
 				.match(0.02)
 				.report
 
-		Match array to 2 (percent):
+		Match array to 2 (percent) and produces a
+		printed report:
 		  ComponentMatch.new([1,2,3])
 				.match(2,'percent')
 				.report
