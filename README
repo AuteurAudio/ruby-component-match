@@ -7,22 +7,28 @@ Overview:	Matches components on a single measured
 		be programatic via array or by way of CSV
 		with column number specified.  Results can
 		be computed and returned in absolute terms
-		or in percentage terms.  Prints a report 
-		but can be modified to not.
+		or in percentage terms, absolute being the
+		default.  There are accessors for the 
+		matched and residual part data, and a 
+		convenience report generator.
 
 Method:		Iterative passes taking best adjacent pairing
 		in forward and reverse sweeps until there are
 		no more potential pairs meeting tolerance
 		criteria. 
 
-Examples:	Match 1st column of CSV to 0.3%:
+Examples:	Match 1st column of CSV to 0.02 (absolute):
 		  ComponentMatch.new('some.csv')
-				.match(0.3)
+				.match(0.02)
+				.report
 
-		Match array to 2%:
+		Match array to 2 (percent):
 		  ComponentMatch.new([1,2,3])
-				.match(2)
+				.match(2,'percent')
+				.report
 		
-		Match 3rd column of CSV to 0.3 units:
+		Match 3rd column of CSV to 0.3 (absolute) and
+		return the matched data:
 		  ComponentMatch.new('some.csv',2)
-			        .match(0.3,'absolute')
+			        .match(0.3)
+				.matched

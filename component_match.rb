@@ -1,10 +1,8 @@
-# A Ruby Component Value Matcher
-# Copyright (c) 2015, Colin Shaw
-# Distributed under the terms of the MIT License 
-
 require 'csv'
 
 class ComponentMatch
+
+    attr_reader :matched, :residual
 
     def generate_diff_list(ordered_list)
         diff_list = []
@@ -15,20 +13,15 @@ class ComponentMatch
     end
 
     def select_pairs_from_diff_list(diff_list)
-        pair_list = []
-        i = 0
+        pair_list, i = [], 0
         while i < diff_list.count-1 do  
             if diff_list[i] <= diff_list[i+1] 
-                pair_list[i]   = true
-                pair_list[i+1] = false
+                pair_list[i], pair_list[i+1] = true, false
                 i = i + 2
             else
                 pair_list[i] = false
                 i = i + 1
             end
-        end
-        if diff_list.count > 0
-            pair_list[diff_list.count-1] = true 
         end
         pair_list
     end
@@ -74,11 +67,9 @@ class ComponentMatch
         original_list - temp
     end
 
-    def match(threshold, diff_mode='percent')
-        @threshold = threshold
-        @diff_mode = diff_mode
-        matched    = []
-        continue   = true
+    def match(threshold, diff_mode='absolute')
+        @threshold, @diff_mode = threshold, diff_mode
+        matched, continue = [], true
         while continue do
             residual  = get_residual(@original_list, matched)
             new_pairs = pairmatch(residual)
@@ -90,34 +81,35 @@ class ComponentMatch
                 end
             end    
         end
-        print_report(matched,residual)
+        @matched, @residual = matched, residual
+        self
     end
     
-    def print_report(matched, residual)
-        percentage = sprintf("%.0f" % (200 * Float(matched.count) / Float(@original_list.count)))
-        puts matched.count.to_s + ' pairs computed out of ' + @original_list.count.to_s + ' candidates (' + percentage + '% matched):'
+    def report
+        percentage = sprintf("%.0f" % (200 * Float(@matched.count) / Float(@original_list.count)))
+        puts @matched.count.to_s + ' pairs computed out of ' + @original_list.count.to_s + ' candidates (' + percentage + '% matched):'
         puts 
-        matched.sort.each do |p|
+        @matched.sort.each do |p|
             if @diff_mode == 'absolute'
-                printf "   [ %.2f | %.2f ]    %.2f\n", p[0], p[1], p[2]
+                printf "   [ %.3f | %.3f ]    %.3f\n", p[0], p[1], p[2]
             elsif @diff_mode == 'percent'
-                printf "   [ %.2f | %.2f ]    %.2f%\n", p[0], p[1], p[2]
+                printf "   [ %.3f | %.3f ]    %.3f%\n", p[0], p[1], p[2]
             end
         end
         puts
         puts 'Unmatch values:'
-        puts '   ' + residual.sort.to_s
+        puts '   ' + @residual.sort.to_s
     end
 
     def initialize(arg,col=0)
         if arg.is_a?String
             @original_list = []
-            CSV.foreach(arg) { |row| @original_list << Float(row[col]) } 
+            CSV.foreach(arg) { |row| @original_list << Float(row[col]) }
         elsif arg.is_a?Array
             @original_list = arg
         end
     end
 
-    private :generate_diff_list, :select_pairs_from_diff_list, :generate_pairings_with_error, :ordered_pairmatch, :get_residual, :print_report
+    private :generate_diff_list, :select_pairs_from_diff_list, :generate_pairings_with_error, :ordered_pairmatch, :get_residual
     
 end 
