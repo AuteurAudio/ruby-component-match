@@ -90,14 +90,14 @@ class ComponentMatch
     end
     
     def report
-        percentage = sprintf("%.0f" % (200 * Float(@matched.count) / Float(@original_list.count)))
+        percentage = "%.0f" % (200 * Float(@matched.count) / Float(@original_list.count))
         puts @matched.count.to_s + ' pairs computed out of ' + @original_list.count.to_s + ' candidates (' + percentage + '% matched):'
         puts 
         @matched.sort.each do |p|
             if @diff_mode == 'absolute'
-                printf "   [ %.3f | %.3f ]    %.3f\n", p[0], p[1], p[2]
+                puts "   [ %.3f | %.3f ]    %.3f" % [p[0],p[1],p[2]]
             elsif @diff_mode == 'percent'
-                printf "   [ %.3f | %.3f ]    %.3f%\n", p[0], p[1], p[2]
+                puts "   [ %.3f | %.3f ]    %.3f%" % [p[0],p[1],p[2]]
             end
         end
         puts
